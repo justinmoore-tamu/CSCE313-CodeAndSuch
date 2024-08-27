@@ -1,0 +1,2 @@
+area of tri: 2
+area of quad: 4
