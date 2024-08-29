@@ -41,14 +41,13 @@ class Shape {
         *points[vertices] = pts[0]; // changed:  end vertice must be the beginning one
     }
 
-    double area () { // changed, does this function actually need to return a reference? (&)
+    double area () { // changed: does this function actually need to return a reference? (&)
         int temp = 0;
-        for (int i = 0; i < vertices; i++) { // changed: removed equal sign to stop reaching outside of points array
+        for (int i = 0; i < vertices; i++) { // changed: removd equal sign to stop reaching outside of points array
             // FIXME: there are two methods to access members of pointers
             //        use one to fix lhs and the other to fix rhs
-            // TODO IDK what the other method to access members of pointers is
-            int lhs = points[i]->x * points[i+1]->y;    // changed to propper member access notation. IDK what the other method is TODO
-            int rhs = points[i+1]->x * points[i]->y;
+            int lhs = points[i]->x * (*points[i+1]).y;    // changed to propper member access notation. 
+            int rhs = points[i+1]->x * (*points[i]).y;      // (*points[i]).y dereferences points[i] and then gets the value of y
             temp += (lhs - rhs);
         }
         double area = abs(temp)/2.0; // TODO fix?
