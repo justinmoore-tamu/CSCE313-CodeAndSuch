@@ -10,7 +10,7 @@ struct Point {
 
 class Shape { 
     int vertices;
-    Point** points; // pointer array
+    Point** points; // pointer array. pointer, which points to an array of Point pointers
 
    public: // changed: imma just make the functions public since I was getting some errors with privitization. Probs considered unsafe, but eh.
     Shape (int _vertices) {
@@ -34,9 +34,11 @@ class Shape {
     }
 
     // I assume this just adds to the points array?
+    // TA had Points * pts being passed in. THis would probably change the statement after the for loop
     void addPoints (/* formal parameter for unsized array called pts */ Point pts[]) { // passed in an array of Points
         for (int i = 0; i <= vertices; i++) {
             memcpy(points[i], &pts[i%vertices], sizeof(Point)); // what does this do
+            // can also be *points[i] = pts[i];
         }
         *points[vertices] = pts[0]; // changed:  end vertice must be the beginning one
     }
@@ -50,7 +52,7 @@ class Shape {
             int rhs = points[i+1]->x * (*points[i]).y;      // (*points[i]).y dereferences points[i] and then gets the value of y
             temp += (lhs - rhs);
         }
-        double area = abs(temp)/2.0; // TODO fix?
+        double area = abs(temp)/2.0; 
         return area;  // changed: removed & from area
 
         // added reference to result instead of reference to local variable
@@ -64,9 +66,9 @@ int main () {
     //          tri1 = (0, 0)
     //          tri2 = (1, 2)
     //          tri3 = (2, 0)
-    Point tri1 = Point(0,0);
-    Point tri2 = {1,2};
-    Point tri3;
+    Point tri1 = Point(0,0); //explicit constructor
+    Point tri2 = {1,2}; //uniform initialization (C++11)
+    Point tri3; // default constructor initializes to 0,0
     tri3.x=2;
     tri3.y=0;
     // adding points to tri
