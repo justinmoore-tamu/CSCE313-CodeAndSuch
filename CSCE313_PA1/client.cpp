@@ -29,9 +29,10 @@ int main (int argc, char *argv[]) {
 	// int e = 1; 
 	int e = 0;
 	string filename = "";
+	int c = -1;
 
 	//Add other arguments here
-	while ((opt = getopt(argc, argv, "p:t:e:f:m:")) != -1) {
+	while ((opt = getopt(argc, argv, "p:t:e:f:m:c")) != -1) {
 		switch (opt) {
 			case 'p':
 				p = atoi (optarg);
@@ -48,6 +49,9 @@ int main (int argc, char *argv[]) {
 			case 'm':
 				m = atoi (optarg);
 				break;
+			case 'c':
+				c = 1;
+				break;
 
 		}
 	}
@@ -63,10 +67,10 @@ int main (int argc, char *argv[]) {
 
 	// in child, run server using exec
 	if (pid == 0) {
-		// TODO get ability to pass m as an optarg
 		string workaround = to_string(m);
 		char* nullList[] = {(char*) "./server", (char*) "-m", (char*) workaround.c_str(), nullptr};
 		execvp(nullList[0], nullList); 
+		// QUIT_MSG;
 	}
 
 	// in parent, connect to control fifo on the client side
@@ -76,12 +80,37 @@ int main (int argc, char *argv[]) {
 	// TODO: later 
 	//Task 4: ////////////////////////////
 	//Request a new channel
+	if (c != -1) {
+		// construct new channel message
+		MESSAGE_TYPE makeChannel = NEWCHANNEL_MSG;
+		// write message to FIFO
+		chan.cwrite(&makeChannel, sizeof(NEWCHANNEL_MSG));
+		// get response from FIFO
+		char newChannelResponseBuffer[30];
+		chan.cread(newChannelResponseBuffer, 30);
+		// fork
+		// pid_t newChannelForkPid = fork();
+		// // join new channel TODO: fix
+		// if (newChannelForkPid == 0) {    // in child
+		// 	// cout << newChannelResponseBuffer<<endl;
+		// 	FIFORequestChannel chan(newChannelResponseBuffer, FIFORequestChannel::CLIENT_SIDE);
+		// } else {
+		// 	// TODO what
+		// 	// this causes a hang
+		// 	MESSAGE_TYPE mes = QUIT_MSG;
+    	// 	chan.cwrite(&mes, sizeof(MESSAGE_TYPE));
+		// 	// return QUIT_MSG;
+		// 	return 1;
+		// }
+		FIFORequestChannel chan(newChannelResponseBuffer, FIFORequestChannel::CLIENT_SIDE);
+		// continue the program
+	}
 	// End Task 4 /////////////////////
-	
+	// cout << "TESTING:  " << chan.name() << endl; // what
 	//Task 2: //////////////////////////
 	//Request data points
 
-	if (t!=-1 || e!=0) { // TODO check this logic
+	if (t!=-1 || e!=0) {
 		// construct message (datamsg) with given arguments
 		// datamsg x(1, 0.0, 1);
 		datamsg x(p,t,e);
