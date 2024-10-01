@@ -20,6 +20,9 @@ using namespace std;
 
 
 int main (int argc, char *argv[]) {
+	// idk if this is needed
+	// vector<string> channelnames;
+	// ........
 	int opt;
 	int m = MAX_MESSAGE;
 	int p = 1;
@@ -103,6 +106,9 @@ int main (int argc, char *argv[]) {
 		// 	return 1;
 		// }
 		FIFORequestChannel chan(newChannelResponseBuffer, FIFORequestChannel::CLIENT_SIDE);
+		// string previousName = chan.name();
+		// FIFORequestChannel* chan = new FIFORequestChannel(newChannelResponseBuffer, FIFORequestChannel::CLIENT_SIDE);
+		// channelnames.push_back(previousName);
 		// continue the program
 	}
 	// End Task 4 /////////////////////
@@ -230,6 +236,13 @@ int main (int argc, char *argv[]) {
 
 	//Task 5:
 	// Closing all the channels
+	// if (c != 0) {
+	// 	MESSAGE_TYPE mes = QUIT_MSG;
+    // 	chan.cwrite(&mes, sizeof(MESSAGE_TYPE));
+	// 	FIFORequestChannel chan(channelnames.back().c_str(), FIFORequestChannel::CLIENT_SIDE);
+	// 	channelnames.pop_back();
+	// }	
+
     MESSAGE_TYPE mes = QUIT_MSG;
     chan.cwrite(&mes, sizeof(MESSAGE_TYPE));
 	
