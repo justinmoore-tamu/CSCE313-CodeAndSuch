@@ -17,7 +17,7 @@ all: lib app
 lib: CCFLAGS+=-shared -fPIC
 lib: $(LIB)
 
-$(LIB): $(LIBSRC) $(INCLPATH)
+$(LIB): $(LIBSRC)
 	$(CC) -I$(INCLPATH) $(CCFLAGS) $(LIBSRC) -o $@
 
 .PHONY: app
