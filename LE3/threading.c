@@ -4,6 +4,7 @@ void t_init()
 {
         // printf("t_init called\n");
         // TODO
+
         // instantiate current_context_idx (current context index)
         current_context_idx = 0;
         // instantiate contexts array (holds state and context information)
@@ -12,7 +13,7 @@ void t_init()
                 // idk how to instantiate of type ucontext_t
                 // getcontext(&contexts[i].context);
         }
-        // if im not wrong, contexts[0] should be the main function context information
+        // if im not wrong, contexts[0] should hold the main function context information
         contexts[0].state = VALID;
         getcontext(&contexts[0].context);
 }
@@ -56,7 +57,8 @@ int32_t t_yield()
         // printf("context got\n");
         // search through contexts array for first instance of a valid context state
         uint8_t validIndex = 100;
-        for (uint8_t i = NUM_CTX-1; i > 0; i--) {
+        // for (uint8_t i = NUM_CTX-1; i > 0; i--) {   // this works. do not delete
+        for (uint8_t i = current_context_idx+1; i != current_context_idx; i = (uint8_t)((i+1) % NUM_CTX)) {
                 // if (contexts[i].state == VALID && i != current_context_idx) {
                 if (contexts[i].state == VALID && i != current_context_idx) {
                         validIndex = i;
@@ -96,6 +98,6 @@ void t_finish()
         memset(&contexts[current_context_idx].context, 0, sizeof(ucontext_t));
         // set state to FINISHED
         contexts[current_context_idx].state = DONE;
-        
+        // yield so that other workers can finish
         t_yield();
 }
